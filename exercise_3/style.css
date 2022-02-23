@@ -1,0 +1,79 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+body,
+#root,
+html,
+.App {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  border: 1px solid black;
+}
+
+.button {
+  background-color: rgb(78, 78, 78);
+
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+}
+
+.button:hover {
+  background-color: rgb(68, 68, 68);
+}
+
+.showcase__emoji {
+  width: fit-content;
+  transform: rotateZ(90deg);
+}
+
+.showcase__emoji-led-on {
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+  background-color: green;
+}
+.showcase__emoji-led-off {
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+  background-color: black;
+}
+
+.showcase__container {
+  padding: 3rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-rows: repeat(auto-fit, minmax(150px, 1fr));
+
+  justify-items: center;
+  grid-auto-rows: auto;
+  grid-gap: 2rem;
+  align-self: stretch;
+}
+
+.showcase__emoji-row {
+  display: flex;
+  width: max-content;
+  height: min-content;
+  margin: 0;
+  padding: 0;
+}
+.showcase__emoji-name {
+}
+.emoji-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

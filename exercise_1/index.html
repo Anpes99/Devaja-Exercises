@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>React App</title>
+  </head>
+  <body>
+    <div class="container">
+    <div id="currentBird"></div>
+
+</div>
+  </body>
+  <script>
+
+const getKeyDownCode = (letter) => {
+  return "Key" + letter.toUpperCase();
+};
+const birdsArray = [
+"sorsa",
+  "kurki",
+  "joutsen",
+  "owl",
+  "kotka",
+  "tikka",
+  "haukka",
+  "pelikaani",
+  "strutsi",
+  "kana",
+];
+let letterPosition = "first"
+let currentBird = birdsArray[0]
+let currentIndex = 0
+document.querySelector("#currentBird").innerHTML = currentBird
+
+document.addEventListener("keydown", (e)=>{
+
+console.log(e.code)
+
+const expectedKeyDownCode =
+          letterPosition === "first"
+            ? getKeyDownCode(currentBird[0])
+            : getKeyDownCode(currentBird[currentBird.length - 1]);
+console.log(expectedKeyDownCode)
+            if (e.code === expectedKeyDownCode) {
+          const pressedLetter = e.code[3];
+          console.log(pressedLetter.toLowerCase());
+          let newString = currentBird.replaceAll(
+            pressedLetter.toLowerCase(),
+            ""
+          );
+          console.log(newString);
+
+          if (newString.length === 0) {
+            currentBird=birdsArray[currentIndex + 1]
+            document.querySelector("#currentBird").innerHTML = currentBird
+
+            currentIndex = currentIndex + 1
+            
+          } else {
+            console.log(newString);
+            currentBird=newString
+            document.querySelector("#currentBird").innerHTML = currentBird
+          }
+          if (letterPosition === "first") {
+            letterPosition = "last"
+          } else {
+            letterPosition="first"
+          }
+        }
+
+})
+
+
+
+
+
+
+    
+  </script>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  </head>
+  <body>
+    <div class="App">
+
+      <canvas
+      
+        id="canvas"
+        class="canvas"
+      ></canvas>
+
+      <a  class="button save-btn">
+        SAVE
+      </a>
+
+
+      </div>
+
+
+
+      <div class="showcase__container">
+
+      </div>
+
+
+
+
+
+
+
+  </body>
+
+
+
+
+
+
+
+
+
+
+  <script>
+
+
+
+
+
+
+    const drawArray = (ctx, array) => {
+  ctx.fillStyle = "green";
+
+  array.forEach((row, i) => {
+    row.forEach((col) => {
+      ctx.strokeRect(...col.params);
+      if (col.isOn) {
+        console.log("gfdsfggsdgsdfgsdf");
+        ctx.fillStyle = "green";
+
+        ctx.fillRect(...col.params);
+      } else {
+        ctx.fillStyle = "black";
+
+        ctx.fillRect(...col.params);
+      }
+    });
+  });
+};
+
+ 
+const initLeds = () => {
+  const array = [];
+  for (let r = 0; r < 8; r++) {
+    array[r] = [];
+    for (let c = 0; c < 8; c++) {
+      const params = [r * 50, c * 50, 50, 50];
+
+      array[r].push({ params, isOn: false });
+    }
+  }
+  return array;
+};
+
+
+    
+  </script>
+
+
+
+
+
+
+
+
+
+
+  <script type="module">
+
+import {
+  addDoc,collection
+  
+} from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+
+const showcaseContainer = document.querySelector(".showcase__container")
+
+    import {getAllEmojis,db} from './firebase.js'
+    let emojis 
+    getAllEmojis().then(emojisRes =>{
+
+
+
+
+      emojis= emojisRes
+
+
+
+
+
+
+
+      const showcaseContents = emojis.map(emoji=>
+{
+
+  return (
+            `<div class="emoji-container">
+                <span class="showcase__emoji">
+                  ${emoji.leds.map((row) => (
+                    `<div class="showcase__emoji-row">
+                      ${row.map((led) => {
+                        if (led.isOn)
+                          return (
+                            `<span class="showcase__emoji-led-on"></span>`
+                          );
+                        return (
+                          `<span class="showcase__emoji-led-off"></span>`
+                        );
+                      }).join("")}
+                    </div>`
+                  )).join("")}
+                </span>
+                <h5 class="showcase__emoji-name">${emoji.name}</h5>
+              </div>`
+            );
+
+
+
+}
+) 
+showcaseContainer.innerHTML = showcaseContents.join(" ")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    }
+    )
+
+    let leds = initLeds()
+    console.log(leds)
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+
+    window.addEventListener("load",()=>{
+    canvas.height = 400;
+    canvas.width = 400;
+
+
+    ctx.strokeStyle = "red";
+    const cords = [100, 100, 50, 50];
+
+    drawArray(ctx, leds);
+
+    })
+
+    
+
+canvas.addEventListener("click", (e) => {
+
+const ctx = canvas.getContext("2d");
+
+let newLeds = [];
+const mouseCords = {
+  x: e.offsetX,
+  y: e.offsetY,
+};
+console.log(leds);
+let clickedLed;
+console.log(leds);
+
+for (let row = 0; row < 8; row++) {
+  for (let col = 0; col < 8; col++) {
+    let sameCol;
+    let sameRow;
+    const led = leds[row][col];
+    if (led.params[0] - mouseCords.x < 0) {
+      if (led.params[0] + 50 > mouseCords.x) {
+        sameCol = true;
+      }
+    }
+    if (led.params[1] - mouseCords.y < 0) {
+      if (led.params[1] + 50 > mouseCords.y) {
+        sameRow = true;
+      }
+    }
+    if (sameCol && sameRow) {
+      clickedLed = led;
+    }
+  }
+}
+
+console.log(clickedLed);
+console.log(leds);
+newLeds = leds.map((row) =>
+  row.map((led) =>
+    led.params === clickedLed.params ? { ...led, isOn: !led.isOn } : led
+  )
+);
+console.log(leds);
+
+leds = newLeds
+drawArray(ctx, newLeds);
+
+ctx.strokeRect(1, 1, 50, 50);
+} )
+ 
+
+const saveBtn = document.querySelector(".save-btn")
+saveBtn.addEventListener("click",async (e)=>{
+
+  const name = window.prompt("Please give a name to your emoji");
+   const res = await addDoc(collection(db, "emojis"), {
+    name,
+    leds: JSON.stringify(leds),
+  }).catch((e) => console.error(e)); 
+leds = initLeds()
+drawArray(ctx, leds)
+  console.log(res);
+
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+
+
+
+
+
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  </head>
+  <body>
+    <div class="App">
+
+
+
+      <a
+        id="add-btn"
+        class="btn mb-1"
+      >
+        ADD
+      </a>
+
+      <select
+id="questions-filter"
+    >
+      <option value="ALL">All</option>
+      <option value="HTML">HTML</option>
+      <option value="CSS">CSS</option>
+      <option value="JS">JS</option>
+    </select>
+
+
+
+
+      <form class="form">
+        <a
+        id="form__cancel"
+          class="btn form__cancel"
+        >
+          CANCEL
+        </a>
+        <h1>Ask The Guru</h1>
+        <input
+        minlength="3"
+        name="question"
+        id="question"
+          class="input"
+          type="text"
+
+        />
+        <select
+        
+          name="category"
+          id="category"
+          required
+        >
+          <option value="" disabled selected >
+            Select Category
+          </option>
+
+          <option value="HTML">HTML</option>
+          <option value="CSS">CSS</option>
+          <option value="JS">JS</option>
+        </select>
+        <div class="form__buttons">
+          <button
+          id="submit-btn"
+          type="submit"
+            class="btn form__save"
+          >
+            SAVE
+          </button>
+        </div>
+      </form>
+
+
+      <div class="entries-box">
+        
+      </div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+
+  </body>
+
+
+
+
+
+  <script>
+
+const addAnEntry = ({ question, category, entries }) => {
+  console.log({ question, category, entries });
+
+  const newEntry = { question, category, date: new Date().getTime() };
+  let newEntries = entries;
+  newEntries.unshift(newEntry);
+  console.log(newEntries);
+  return newEntries;
+};
+
+const saveNewEntries = (newEntries) => {
+    console.log(newEntries);
+    setEntries(newEntries);
+    localStorage.setItem(
+      "GuruQuestionAppSavedEntries",
+      JSON.stringify(newEntries)
+    );
+  };
+
+
+
+
+
+
+
+
+document.querySelector(".form").style.display = "none"
+
+let entries  = 
+      localStorage.getItem("GuruQuestionAppSavedEntries")
+    ;
+    if (entries)  entries  = 
+      JSON.parse(localStorage.getItem("GuruQuestionAppSavedEntries"))
+    console.log(entries)
+    if (!entries){
+      localStorage.setItem("GuruQuestionAppSavedEntries", JSON.stringify([]))
+      entries = []
+    }
+
+
+const addBtn = document.querySelector("#add-btn")
+addBtn.addEventListener("click", e=>{
+document.querySelector(".form").style.display = "flex"
+
+})
+const cancelBtn = document.querySelector(".form__cancel")
+cancelBtn.addEventListener("click", e=>{
+document.querySelector(".form").style.display = "none"
+
+})
+const entriesBox = document.querySelector(".entries-box")
+const entryElements =  entries.map((entry, i) => `<span class="entry">
+              <div>question: ${entry.question}</div>
+              <div>category: ${entry.category}</div>
+              <div>date: ${new Date(entry.date)}</div>
+            </span>`)
+
+entriesBox.innerHTML = entryElements.join("")
+
+
+
+const submitBtn = document.querySelector("#submit-btn")
+submitBtn.addEventListener("click", (e)=>{
+  e.preventDefault()
+  const category = document.querySelector("#category").value
+  if (category === "") return
+    console.log(category)
+  document.querySelector("#category").value = ""
+  const question = document.querySelector("#question").value
+  document.querySelector("#question").value = ""
+  entries = addAnEntry({question, category, entries})
+  localStorage.setItem("GuruQuestionAppSavedEntries", JSON.stringify(entries))
+
+  const entryElements =  entries.map((entry, i) => `<span class="entry">
+              <div>question: ${entry.question}</div>
+              <div>category: ${entry.category}</div>
+              <div>date: ${new Date(entry.date)}</div>
+            </span>`)
+
+entriesBox.innerHTML = entryElements.join("")
+
+
+
+  console.log(category)}
+
+)
+
+
+
+const questionsFilter = document.querySelector("#questions-filter")
+questionsFilter.addEventListener("change", e=>{
+const categoryFilter = e.target.value
+
+  const entryElements =  entries.filter((entry) =>
+          categoryFilter === "ALL" ? true : entry.category === categoryFilter
+        ).map((entry, i) => `<span class="entry">
+              <div>question: ${entry.question}</div>
+              <div>category: ${entry.category}</div>
+              <div>date: ${new Date(entry.date)}</div>
+            </span>`)
+
+entriesBox.innerHTML = entryElements.join("")
+
+
+
+
+  console.log(e.target.value) 
+})
+
+
+
+    
+  </script>
+
+
+
+
+
+</html>
